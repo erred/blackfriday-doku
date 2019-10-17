@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"io/ioutil"
 	"os"
 
 	"github.com/rs/zerolog"
@@ -16,8 +18,15 @@ const (
 
 func main() {
 	initLog()
-	//
-	blackfriday.Run(nil, blackfriday.WithRenderer(doku.NewRenderer()), blackfriday.WithExtensions(es))
+
+	b, err := ioutil.ReadFile(os.Args[1])
+	if err != nil {
+		log.Fatal().Err(err).Msg("read file")
+	}
+
+	b = blackfriday.Run(b, blackfriday.WithRenderer(doku.NewRenderer()), blackfriday.WithExtensions(es))
+
+	fmt.Printf("\n%s\n", b)
 
 }
 
