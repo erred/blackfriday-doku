@@ -8,16 +8,24 @@ import (
 	"github.com/russross/blackfriday"
 )
 
+const (
+	// Exts are the default supported extensions
+	Exts = blackfriday.Tables | blackfriday.FencedCode | blackfriday.Autolink | blackfriday.Strikethrough | blackfriday.SpaceHeadings
+)
+
+// Renderer, a nil renderer is also valid
 type Renderer struct {
 	prefix   []byte
 	ctrs     [][]byte
 	tableSep []byte
 }
 
+// NewRenderer creates a new renderer
 func NewRenderer() *Renderer {
 	return &Renderer{}
 }
 
+// RenderNode renders a node into output
 func (r *Renderer) RenderNode(w io.Writer, node *blackfriday.Node, entering bool) blackfriday.WalkStatus {
 	if node == nil {
 		return blackfriday.Terminate
@@ -108,6 +116,9 @@ func (r *Renderer) RenderNode(w io.Writer, node *blackfriday.Node, entering bool
 			break
 		}
 		r.ctrs = r.ctrs[:len(r.ctrs)-1]
+		if len(r.ctrs) == 0 {
+			w.Write([]byte("\n"))
+		}
 	case blackfriday.Item:
 		// noop, see Text
 
