@@ -1,6 +1,7 @@
 package doku
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/russross/blackfriday"
@@ -187,4 +188,20 @@ out
 			}
 		}
 	}
+}
+
+func ExampleRenderer() {
+	input := []byte(`
+# Example
+this is *just* an
+**example**
+
+---
+
+| thing | good |
+| ----- | ----:|
+| this  | yes  |
+        `)
+	o := blackfriday.Run(input, blackfriday.WithRenderer(NewRenderer()), blackfriday.WithExtensions(Exts))
+	fmt.Printf("%s\n", o)
 }
