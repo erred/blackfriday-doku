@@ -98,27 +98,26 @@ new list
    2. sub ordered 2
 `),
 			[]byte(`
-* unordered 1
-  * sub unordered 1
-  * sub unordered 2
-* unordered 2
-  - sub ordered 1
-  - sub ordered 2
+  * unordered 1
+    * sub unordered 1
+    * sub unordered 2
+  * unordered 2
+    - sub ordered 1
+    - sub ordered 2
 
 new list
 
-- ordered 1
-  * sub unordered 1
-  * sub unordered 2
-- ordered 2
-  - sub ordered 1
-  - sub ordered 2
+  - ordered 1
+    * sub unordered 1
+    * sub unordered 2
+  - ordered 2
+    - sub ordered 1
+    - sub ordered 2
 `),
 		}, {
 			"quotes",
 			[]byte(`
 unquoted
-
 > but this
 > is on 2 lines
 > > 2 levels

@@ -71,10 +71,6 @@ func (r *Renderer) RenderNode(w io.Writer, node *blackfriday.Node, entering bool
 		w.Write([]byte("</del>"))
 
 	case blackfriday.Paragraph:
-		if entering {
-			w.Write([]byte("\n"))
-			break
-		}
 		if len(r.prefix) == 0 && len(r.ctrs) == 0 {
 			w.Write([]byte("\n"))
 		}
@@ -83,14 +79,8 @@ func (r *Renderer) RenderNode(w io.Writer, node *blackfriday.Node, entering bool
 			w.Write(node.Literal)
 			break
 		}
-		po := r.prefix
-		if len(r.ctrs) > 0 {
-			b := bytes.Repeat([]byte("  "), len(r.ctrs)-1)
-			r.prefix = append(r.prefix, b...)
-			r.prefix = append(r.prefix, r.ctrs[len(r.ctrs)-1]...)
-		}
 		w.Write(r.prefix)
-		r.prefix = po
+
 		w.Write(bytes.Join(bytes.Split(node.Literal, []byte("\n")), append([]byte("\n"), r.prefix...)))
 
 	case blackfriday.HorizontalRule:
@@ -117,9 +107,16 @@ func (r *Renderer) RenderNode(w io.Writer, node *blackfriday.Node, entering bool
 		}
 		r.ctrs = r.ctrs[:len(r.ctrs)-1]
 		if len(r.ctrs) == 0 {
+			r.ctrs = nil
 			w.Write([]byte("\n"))
 		}
 	case blackfriday.Item:
+		if entering {
+			b := bytes.Repeat([]byte("  "), len(r.ctrs))
+			b = append(b, r.ctrs[len(r.ctrs)-1]...)
+			w.Write([]byte("\n"))
+			w.Write(b)
+		}
 		// noop, see Text
 
 	case blackfriday.Table:
