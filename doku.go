@@ -156,7 +156,7 @@ func (r *Renderer) RenderNode(w io.Writer, node *blackfriday.Node, entering bool
 	case blackfriday.Hardbreak:
 		// unimplemented
 	case blackfriday.HTMLSpan:
-		// noop
+		w.Write(node.Literal)
 
 	default:
 		// unimplemented
